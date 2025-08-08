@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Curso BlatoRH Group - Manejo de Información</title>
+    <title>Curso BlatoRH Group - Uso de Dispositivos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
@@ -333,7 +333,7 @@
                                  </div>
                                  <div>
                                      <label for="email" class="block text-sm font-medium text-slate-300">Email Corporativo</label>
-                                     <input type="email" id="email" class="input-field" required pattern=".*@blatorh\.com$">
+                                     <input type="email" id="email" class="input-field" required pattern=".*@blatoRH\.com$">
                                  </div>
                                  <button type="submit" id="login-submit-btn" class="btn btn-primary w-full !mt-8 pulsing-button">
                                      <span class="btn-text">Ingresar al Curso</span>
@@ -483,26 +483,39 @@
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InpheHlva2Vqdnd1cHdtYmhlbnNvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4NzMwNDYsImV4cCI6MjA2ODQ0OTA0Nn0.boNwgjYadjo6deO_YfKbLCGt0ug4H012D2KuhX0WZB8';
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
-        const COURSE_TITLE = "Manejo e Intercambio de Información para Consultores";
-        const RESOURCE_PDF_URL = 'https://raw.githubusercontent.com/BLHTR/CursoManejoeIntecambioInformacion/main/Manejo%20e%20Intercambio%20de%20Informaci%C3%B3n%20para%20Consultores%20(1).pdf';
+        const COURSE_TITLE = "Instructivo para el Uso y Cuidado de Dispositivos Corporativos";
+        const RESOURCE_PDF_URL = 'https://raw.githubusercontent.com/BLHTR/CursoUsoyCuidadodeDispositivos/main/Instructivo%20para%20el%20Uso%20y%20Cuidado%20de%20Dispositivos%20Corporativos.pdf';
 
         // --- DATOS DEL CURSO ---
         const chapters = [
-            { title: "Almacenamiento de Información", content: `<p><strong>Ubicación del Almacenamiento:</strong> Todos los consultores deben almacenar la información exclusivamente en los <strong>servidores en la nube de Google</strong> proporcionados por BlatoRH Group.</p><p class="mt-4"><strong>Organización:</strong> La información debe organizarse en carpetas por temas. El propietario de cada carpeta decide si su contenido es de uso común para todo el equipo de BlatoRH o si tiene acceso restringido a ciertos miembros.</p><p class="mt-4"><strong>Clasificación Sugerida:</strong></p><ul class="list-disc list-inside ml-4 space-y-2"><li><strong>Pública:</strong> Accesible por cualquier persona sin restricciones.</li><li><strong>Interna:</strong> Para uso exclusivo del personal de BlatoRH Group.</li><li><strong>Confidencial:</strong> Información muy sensible, accesible solo por personal autorizado.</li></ul>` },
-            { title: "Intercambio de Información", content: `<p><strong>Medios Aprobados:</strong> Para compartir información, deben utilizarse las herramientas de la suite de Google (Drive, Docs, Sheets, Slides) y otras herramientas homologadas por BlatoRH Group como Excel, PowerPoint y Word.</p><p class="mt-4"><strong>Reglas para Compartir:</strong> La información solo debe compartirse con clientes aprobados. Está prohibido compartirla con consultores externos que no trabajen para BlatoRH Group.</p><p class="mt-4"><strong>Medidas para Información Confidencial:</strong></p><ul class="list-disc list-inside ml-4 space-y-2"><li>Utilizar siempre <strong>autenticación adicional</strong> para asegurar el acceso autorizado.</li><li><strong>Verificar los permisos</strong> de acceso antes de compartir cualquier archivo.</li><li><strong>Nunca usar enlaces públicos.</strong> Compartir directamente con cuentas de correo específicas mediante invitaciones.</li></ul>` },
-            { title: "Acceso y Control de Información", content: `<p><strong>Acceso a Datos Confidenciales:</strong> La información clasificada como Confidencial debe ser accesible únicamente por los <strong>socios de BlatoRH Group</strong> y las personas que ellos designen de forma explícita.</p><p class="mt-4"><strong>Proceso de Offboarding (Desvinculación):</strong> Cuando un consultor deja la empresa, se deben tomar las siguientes acciones de inmediato:</p><ul class="list-disc list-inside ml-4 space-y-2"><li><strong>Revocar inmediatamente todos los accesos</strong> a la información y sistemas de la empresa.</li><li>Asegurar que el consultor <strong>no conserve copias</strong> de información confidencial en sus dispositivos personales.</li></ul>` },
-            { title: "Uso de Información en Dispositivos Móviles", content: `<p><strong>Restricción Principal:</strong> Está terminantemente <strong>prohibido acceder a información clasificada como Confidencial</strong> desde dispositivos móviles (smartphones, tablets) para minimizar riesgos de fuga de datos.</p><p class="mt-4"><strong>Acceso Permitido:</strong> El acceso a información Pública e Interna está permitido desde móviles, siempre que se cumplan dos condiciones:</p><ul class="list-disc list-inside ml-4 space-y-2"><li>El dispositivo debe tener medidas de seguridad básicas, como <strong>bloqueo de pantalla</strong> y un sistema operativo actualizado.</li><li>Se debe evitar el uso de <strong>redes Wi-Fi públicas no seguras</strong> al manejar información de la empresa.</li></ul>` },
-            { title: "Backup y Recuperación de Datos", content: `<p><strong>Política de Backups:</strong> Las políticas de respaldo de datos son las gestionadas directamente por Google, que realiza <strong>copias de seguridad automáticas</strong> de toda la información en sus servidores.</p><p class="mt-4"><strong>Responsabilidad del Consultor:</strong> Los consultores no necesitan realizar acciones adicionales para el respaldo de la información.</p><p class="mt-4"><strong>En Caso de Pérdida de Datos:</strong></p><ul class="list-disc list-inside ml-4 space-y-2"><li>Contactar inmediatamente al equipo de <strong>soporte de TI de BlatoRH Group</strong> para iniciar la recuperación.</li><li>No intentar restaurar datos desde fuentes no autorizadas para no comprometer su integridad.</li></ul>` },
-            { title: "Manejo de Incidentes de Seguridad", content: `<p><strong>Acción Inmediata:</strong> En caso de una fuga de datos o un acceso no autorizado, el consultor debe <strong>notificar inmediatamente a su supervisor directo y al equipo de seguridad</strong> de BlatoRH Group.</p><p class="mt-4"><strong>Información a Proporcionar:</strong> Se deben entregar detalles completos del incidente, incluyendo qué información se vio comprometida y las circunstancias del suceso.</p><p class="mt-4"><strong>Procedimientos Internos:</strong> Se activará el protocolo para contener el impacto, documentar el incidente y notificar a las partes afectadas si fuera necesario.</p>` },
-            { title: "Formación y Concienciación", content: `<p><strong>Frecuencia:</strong> Todos los consultores reciben una <strong>jornada de concientización anual</strong> sobre el manejo seguro de la información.</p><p class="mt-4"><strong>Temas Cubiertos:</strong></p><ul class="list-disc list-inside ml-4 space-y-2"><li>Mejores prácticas para almacenar y compartir datos.</li><li>Actualizaciones sobre nuevas amenazas de seguridad.</li><li>Procedimientos a seguir en caso de incidentes.</li></ul><p class="mt-4"><strong>Métodos de Formación:</strong> La capacitación puede incluir talleres, cursos en línea, boletines y evaluaciones para verificar el conocimiento adquirido.</p>` }
+            { 
+                title: "Asignación y Uso de Dispositivos", 
+                content: `<p><strong>Asignación de Dispositivos:</strong> Todos los consultores reciben una notebook corporativa con las aplicaciones necesarias preinstaladas. No todos los consultores recibirán teléfonos móviles corporativos.</p><p class="mt-4"><strong>Uso Permitido y Restricciones:</strong></p><ul class="list-disc list-inside ml-4 space-y-2"><li>Está permitido el uso moderado de redes sociales y correos personales, siempre que no interfiera con las responsabilidades laborales.</li><li>Está prohibido descargar o instalar aplicaciones adicionales sin la autorización expresa de BlatoRH. Las aplicaciones corporativas preinstaladas son las únicas autorizadas.</li></ul>` 
+            },
+            { 
+                title: "Políticas de Seguridad Esenciales", 
+                content: `<p><strong>Software de Seguridad:</strong> Las notebooks ya incluyen aplicaciones de seguridad preinstaladas, por lo que no se requiere el uso de cifrado adicional por parte del consultor.</p><p class="mt-4"><strong>Conexiones de Red:</strong></p><ul class="list-disc list-inside ml-4 space-y-2"><li>No se permite el uso de redes Wi-Fi públicas para acceder a sistemas corporativos. Se deben utilizar redes seguras y privadas.</li><li>BlatoRH no dispone de una VPN propia, por lo que se deben seguir estrictamente las directrices de acceso seguro.</li></ul><p class="mt-4"><strong>Contraseñas:</strong> Se deben seguir las políticas generales de contraseñas de BlatoRH, detalladas en otro proceso.</p>` 
+            },
+            { 
+                title: "Actualizaciones y Mantenimiento", 
+                content: `<p><strong>Actualizaciones de Software:</strong> Es responsabilidad del consultor realizar las actualizaciones de software en su notebook cada vez que el sistema lo solicite.</p><p class="mt-4"><strong>Almacenamiento de Datos:</strong></p><ul class="list-disc list-inside ml-4 space-y-2"><li>El espacio disponible incluye la capacidad de la notebook y el almacenamiento en la nube de Google.</li><li>Toda la información y datos corporativos deben guardarse en estos medios autorizados.</li></ul>` 
+            },
+            { 
+                title: "Soporte y Procedimientos Clave", 
+                content: `<p><strong>Soporte Técnico:</strong> En caso de falla, pérdida o robo de un dispositivo, el consultor debe notificar de inmediato al área de Seguridad y a Recursos Humanos para recibir asistencia y seguir los pasos correspondientes.</p><p class="mt-4"><strong>Uso de Dispositivos Externos:</strong></p><ul class="list-disc list-inside ml-4 space-y-2"><li>Está permitido el uso de dispositivos USB y otros medios externos para transferir información.</li><li>Es obligatorio seguir siempre las políticas de seguridad de la información establecidas por BlatoRH al usar estos dispositivos.</li></ul>` 
+            },
+            { 
+                title: "Cuidado Físico y Devolución", 
+                content: `<p><strong>Responsabilidad y Cuidado:</strong> Los consultores son responsables del buen estado y cuidado físico de los dispositivos asignados por BlatoRH. Se debe evitar dejarlos desatendidos en lugares públicos o de acceso no controlado.</p><p class="mt-4"><strong>Devolución de Dispositivos:</strong></p><ul class="list-disc list-inside ml-4 space-y-2"><li>Al finalizar la relación laboral o cuando el dispositivo ya no sea necesario, debe ser devuelto en condiciones adecuadas.</li><li>El procedimiento detallado para la devolución se encuentra en el proceso de Offboarding de la compañía.</li></ul>` 
+            }
         ];
 
         const quizQuestions = [
-            { question: "¿Dónde deben los consultores almacenar la información de BlatoRH Group?", options: ["En sus discos duros personales para un acceso más rápido.", "En los servidores en la nube de Google de BlatoRH.", "En dispositivos USB encriptados.", "En cualquier plataforma en la nube como Dropbox o OneDrive."], answer: 1 },
-            { question: "Al compartir información clasificada como \"Confidencial\", ¿cuál es la medida de seguridad correcta?", options: ["Compartir un enlace público que expire en 24 horas.", "Publicarlo en un canal general de la empresa.", "Compartir el archivo directamente con las cuentas de correo específicas autorizadas.", "Enviar el archivo como adjunto en un email sin protección."], answer: 2 },
-            { question: "¿Qué tipo de información está estrictamente prohibido acceder desde dispositivos móviles personales?", options: ["Información Pública.", "Información Interna.", "Información Confidencial.", "Toda la información de la empresa."], answer: 2 },
-            { question: "¿Cuál es el primer paso que debe dar un consultor si detecta un incidente de seguridad, como una fuga de datos?", options: ["Intentar solucionar el problema por su cuenta para no alarmar.", "Apagar el equipo y esperar instrucciones.", "Notificar inmediatamente a su supervisor y al equipo de seguridad.", "Investigar la causa raíz antes de reportar."], answer: 2 },
-            { question: "Durante el proceso de offboarding (desvinculación) de un consultor, ¿qué acción es prioritaria?", options: ["Realizar una entrevista de salida.", "Revocar inmediatamente todos sus accesos a los sistemas y a la información.", "Pedirle que devuelva el merchandising de la empresa.", "Felicitarlo por su nuevo empleo."], answer: 1 }
+            { question: "¿Qué acción requiere autorización explícita de BlatoRH antes de ser realizada en tu notebook corporativa?", options: ["Usar redes sociales para fines personales", "Realizar las actualizaciones que solicita el sistema", "Descargar e instalar una nueva aplicación", "Guardar documentos en la nube de Google"], answer: 2 },
+            { question: "¿Cuál de las siguientes acciones está prohibida según las políticas de seguridad para la conexión de red?", options: ["Utilizar la red Wi-Fi de tu casa", "Conectarse a una red Wi-Fi pública para acceder a sistemas corporativos", "Usar el hotspot de un teléfono móvil", "Conectarse a la red de un cliente"], answer: 1 },
+            { question: "En caso de robo o pérdida de tu notebook, ¿a quién debes notificar de inmediato?", options: ["Solamente a tu supervisor directo", "Al área de Compras para solicitar una nueva", "A la policía local y esperar el reporte", "Al área de Seguridad y a Recursos Humanos"], answer: 3 },
+            { question: "¿Quién es el responsable de realizar las actualizaciones de software en la notebook?", options: ["El equipo de Soporte Técnico de forma remota", "El consultor, cada vez que el sistema lo solicite", "No es necesario realizar actualizaciones", "El cliente en cuyas oficinas se encuentre el consultor"], answer: 1 },
+            { question: "¿Dónde se encuentra detallado el proceso para la devolución de los dispositivos al finalizar la relación laboral?", options: ["En este mismo instructivo", "En el contrato laboral inicial", "En el proceso de Offboarding de la compañía", "Se debe preguntar a un compañero"], answer: 2 }
         ];
         
         // --- ELEMENTOS DEL DOM ---
@@ -627,7 +640,7 @@
             domElements.voiceSelect.innerHTML = state.availableVoices.length ? '' : '<option>No hay voces en español</option>';
             
             let defaultVoiceURI = state.availableVoices[0]?.voiceURI;
-            if(!localStorage.getItem('blatorh_audio_settings')) {
+            if(!localStorage.getItem('blatoRH_audio_settings')) {
                 const priorityOrder = ['es-AR', 'es-MX', 'es-ES'];
                 for(const lang of priorityOrder) {
                     const found = state.availableVoices.find(v => v.lang === lang);
@@ -642,12 +655,12 @@
                 domElements.voiceSelect.appendChild(option);
             });
             
-            state.audioSettings.voiceURI = localStorage.getItem('blatorh_audio_settings') ? JSON.parse(localStorage.getItem('blatorh_audio_settings')).voiceURI : defaultVoiceURI;
+            state.audioSettings.voiceURI = localStorage.getItem('blatoRH_audio_settings') ? JSON.parse(localStorage.getItem('blatoRH_audio_settings')).voiceURI : defaultVoiceURI;
             if(state.audioSettings.voiceURI) domElements.voiceSelect.value = state.audioSettings.voiceURI;
         }
 
         function loadAudioSettings() {
-            const savedSettings = JSON.parse(localStorage.getItem('blatorh_audio_settings'));
+            const savedSettings = JSON.parse(localStorage.getItem('blatoRH_audio_settings'));
             if (savedSettings) state.audioSettings = savedSettings;
             if(domElements.voiceSelect.options.length > 0 && state.audioSettings.voiceURI) domElements.voiceSelect.value = state.audioSettings.voiceURI;
             domElements.voiceSpeed.value = state.audioSettings.rate;
@@ -670,7 +683,7 @@
             state.audioSettings.voiceURI = domElements.voiceSelect.value;
             state.audioSettings.rate = parseFloat(domElements.voiceSpeed.value);
             state.audioSettings.volume = parseFloat(domElements.voiceVolume.value);
-            localStorage.setItem('blatorh_audio_settings', JSON.stringify(state.audioSettings));
+            localStorage.setItem('blatoRH_audio_settings', JSON.stringify(state.audioSettings));
             domElements.audioSettingsPanel.classList.remove('open');
             showMessage('Configuración de voz guardada.', 'success');
             if (window.speechSynthesis.speaking) window.speechSynthesis.cancel();
@@ -829,8 +842,8 @@
         
         function restartCourse(fullRestart = true) {
              if (fullRestart) {
-                 localStorage.removeItem('blatorh_course_email');
-                 localStorage.removeItem('blatorh_course_title');
+                 localStorage.removeItem('blatoRH_course_email');
+                 localStorage.removeItem('blatoRH_course_title');
                  state.currentUser = null;
                  window.location.reload();
              } else { startQuiz(); }
@@ -872,7 +885,7 @@
              const encodedUri = encodeURI(csvContent);
              const link = document.createElement("a");
              link.setAttribute("href", encodedUri);
-             link.setAttribute("download", "aprobados_curso_manejo_informacion.csv");
+             link.setAttribute("download", `aprobados_${COURSE_TITLE.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.csv`);
              document.body.appendChild(link);
              link.click();
              document.body.removeChild(link);
@@ -896,8 +909,8 @@
                 domElements.exportCsvBtn.addEventListener('click', exportApprovedUsersToCsv);
                 return;
             }
-            const storedEmail = localStorage.getItem('blatorh_course_email');
-            const storedCourseTitle = localStorage.getItem('blatorh_course_title');
+            const storedEmail = localStorage.getItem('blatoRH_course_email');
+            const storedCourseTitle = localStorage.getItem('blatoRH_course_title');
             if (storedEmail && storedCourseTitle === COURSE_TITLE) {
                 try {
                     const { data: user, error } = await supabaseClient.from('users_progress').select('*').eq('email', storedEmail).eq('course_title', COURSE_TITLE).single();
@@ -922,11 +935,11 @@
                 if (error && error.code !== 'PGRST116') throw error;
                 state.currentUser = existingUser ? { ...existingUser, name, surname } : { id: crypto.randomUUID(), name, surname, email, course_title: COURSE_TITLE, progress: 0, quiz_score: null, completed_date: null, approved: false };
                 await saveUserProgressToSupabase(state.currentUser);
-                localStorage.setItem('blatorh_course_email', email); localStorage.setItem('blatorh_course_title', COURSE_TITLE);
+                localStorage.setItem('blatoRH_course_email', email); localStorage.setItem('blatoRH_course_title', COURSE_TITLE);
                 if (state.currentUser.approved) { showScreen('diploma'); updateDiplomaContent(); } 
                 else { showScreen('course'); state.currentChapterIndex = state.currentUser.progress || 0; loadChapter(); }
             } catch (err) { showMessage(`Error en el ingreso: ${err.message}`, 'error'); } 
-            finally { btn.disabled = false; btn.querySelector('.btn-text').classList.remove('hidden'); btn.querySelector('.btn-loader').add('hidden'); }
+            finally { btn.disabled = false; btn.querySelector('.btn-text').classList.remove('hidden'); btn.querySelector('.btn-loader').classList.add('hidden'); }
         });
 
         domElements.listenBtn.addEventListener('click', handleListen);
