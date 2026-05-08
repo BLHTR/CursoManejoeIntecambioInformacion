@@ -335,6 +335,10 @@
                                      <label for="email" class="block text-sm font-medium text-slate-300">Email Corporativo</label>
                                      <input type="email" id="email" class="input-field" required pattern=".*@blatorh\.com$">
                                  </div>
+                                 <div>
+                                     <label for="course-year" class="block text-sm font-medium text-slate-300">Año del Curso</label>
+                                     <input type="number" id="course-year" class="input-field" required min="2025" max="2099">
+                                 </div>
                                  <button type="submit" id="login-submit-btn" class="btn btn-primary w-full !mt-8 pulsing-button">
                                      <span class="btn-text">Ingresar al Curso</span>
                                      <span class="btn-loader hidden animate-spin rounded-full h-5 w-5 border-t-2 border-b-2 border-slate-900 mx-auto"></span>
@@ -466,6 +470,7 @@
                                  <th class="py-3 px-6 text-left">Nombre</th>
                                  <th class="py-3 px-6 text-left">Apellido</th>
                                  <th class="py-3 px-6 text-left">Email</th>
+                                 <th class="py-3 px-6 text-left">Año</th>
                                  <th class="py-3 px-6 text-left">Score</th>
                                  <th class="py-3 px-6 text-left">Fecha</th>
                              </tr>
@@ -484,6 +489,7 @@
         const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
         
         const COURSE_TITLE = "Manejo e Intercambio de Información para Consultores";
+        const COURSE_YEAR = new Date().getFullYear();
         const RESOURCE_PDF_URL = 'https://raw.githubusercontent.com/BLHTR/CursoManejoeIntecambioInformacion/main/Manejo%20e%20Intercambio%20de%20Informaci%C3%B3n%20para%20Consultores%20(1).pdf';
 
         // --- DATOS DEL CURSO ---
@@ -509,7 +515,7 @@
         const domElements = {
             appHeader: document.getElementById('app-header'),
             screens: { login: document.getElementById('login-screen'), course: document.getElementById('course-screen'), quiz: document.getElementById('quiz-screen'), result: document.getElementById('result-screen'), diploma: document.getElementById('diploma-screen'), admin: document.getElementById('admin-panel'), },
-            loginForm: document.getElementById('login-form'), loginSubmitBtn: document.getElementById('login-submit-btn'), nameInput: document.getElementById('name'), surnameInput: document.getElementById('surname'), emailInput: document.getElementById('email'), loginCourseTitle: document.getElementById('login-course-title'), loginCourseTitleMobile: document.getElementById('login-course-title-mobile'), courseDurationEstimate: document.getElementById('course-duration-estimate'),
+            loginForm: document.getElementById('login-form'), loginSubmitBtn: document.getElementById('login-submit-btn'), nameInput: document.getElementById('name'), surnameInput: document.getElementById('surname'), emailInput: document.getElementById('email'), courseYearInput: document.getElementById('course-year'), loginCourseTitle: document.getElementById('login-course-title'), loginCourseTitleMobile: document.getElementById('login-course-title-mobile'), courseDurationEstimate: document.getElementById('course-duration-estimate'),
             chapterNumber: document.getElementById('chapter-number'), progressBar: document.getElementById('progress-bar'), chapterTitle: document.getElementById('chapter-title'), chapterContent: document.getElementById('chapter-content'), listenBtn: document.getElementById('listen-btn'), nextBtn: document.getElementById('next-btn'),
             quizProgressBar: document.getElementById('quiz-progress-bar'), quizContent: document.getElementById('quiz-content'), prevQuestionBtn: document.getElementById('prev-question-btn'), nextQuestionBtn: document.getElementById('next-question-btn'), submitQuizBtn: document.getElementById('submit-quiz-btn'),
             resultScore: document.getElementById('result-score'), resultMessage: document.getElementById('result-message'), resultSummary: document.getElementById('result-summary'), restartQuizBtn: document.getElementById('restart-quiz-btn'), diplomaBtn: document.getElementById('diploma-btn'),
@@ -549,8 +555,25 @@
         }
 
         async function saveUserProgressToSupabase(user) {
-            const { error } = await supabaseClient.from('users_progress').upsert(user, { onConflict: 'id' });
-            if (error) console.error('Error guardando progreso:', error.message);
+            const userToSave = {
+                ...user,
+                course_year: parseInt(user.course_year, 10) || COURSE_YEAR
+            };
+
+            const { data, error } = await supabaseClient
+                .from('users_progress')
+                .upsert(userToSave, { onConflict: 'email,course_title,course_year' })
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Error guardando progreso en Supabase:', error);
+                showMessage(`Error guardando progreso: ${error.message}`, 'error');
+                throw error;
+            }
+
+            state.currentUser = data || userToSave;
+            return state.currentUser;
         }
 
         function updateProgressBar() {
@@ -831,6 +854,7 @@
              if (fullRestart) {
                  localStorage.removeItem('blatorh_course_email');
                  localStorage.removeItem('blatorh_course_title');
+                 localStorage.removeItem('blatorh_course_year');
                  state.currentUser = null;
                  window.location.reload();
              } else { startQuiz(); }
@@ -840,7 +864,7 @@
             try {
                 const { data, error } = await supabaseClient
                     .from('users_progress')
-                    .select('name, surname, email, quiz_score, completed_date')
+                    .select('name, surname, email, course_year, quiz_score, completed_date')
                     .eq('approved', true)
                     .order('completed_date', { ascending: false });
 
@@ -851,6 +875,7 @@
                         <td class="py-3 px-6 text-left">${user.name || ''}</td>
                         <td class="py-3 px-6 text-left">${user.surname || ''}</td>
                         <td class="py-3 px-6 text-left">${user.email}</td>
+                        <td class="py-3 px-6 text-left">${user.course_year || ''}</td>
                         <td class="py-3 px-6 text-left">${user.quiz_score}%</td>
                         <td class="py-3 px-6 text-left">${user.completed_date}</td>
                     </tr>
@@ -861,7 +886,7 @@
         }
 
         function exportApprovedUsersToCsv() {
-             const rows = [['Nombre', 'Apellido', 'Email', 'Score', 'Fecha']];
+             const rows = [['Nombre', 'Apellido', 'Email', 'Año', 'Score', 'Fecha']];
              const tableRows = domElements.approvedUsersTableBody.querySelectorAll('tr');
              tableRows.forEach(row => {
                  const cols = row.querySelectorAll('td');
@@ -888,6 +913,7 @@
             domElements.loginCourseTitleMobile.textContent = COURSE_TITLE;
             domElements.diplomaCourseTitle.textContent = `"${COURSE_TITLE}"`;
             domElements.courseDurationEstimate.textContent = `Duración: ${calculateCourseDuration()} min`;
+            domElements.courseYearInput.value = COURSE_YEAR;
             initAudioSystem();
             const urlParams = new URLSearchParams(window.location.search);
             if (urlParams.get('admin') === 'true') {
@@ -898,9 +924,10 @@
             }
             const storedEmail = localStorage.getItem('blatorh_course_email');
             const storedCourseTitle = localStorage.getItem('blatorh_course_title');
-            if (storedEmail && storedCourseTitle === COURSE_TITLE) {
+            const storedCourseYear = parseInt(localStorage.getItem('blatorh_course_year'), 10);
+            if (storedEmail && storedCourseTitle === COURSE_TITLE && storedCourseYear === COURSE_YEAR) {
                 try {
-                    const { data: user, error } = await supabaseClient.from('users_progress').select('*').eq('email', storedEmail).eq('course_title', COURSE_TITLE).single();
+                    const { data: user, error } = await supabaseClient.from('users_progress').select('*').eq('email', storedEmail).eq('course_title', COURSE_TITLE).eq('course_year', COURSE_YEAR).single();
                     if (error && error.code !== 'PGRST116') throw error;
                     if (user) {
                         state.currentUser = user;
@@ -916,17 +943,22 @@
             unlockAudio();
             const btn = domElements.loginSubmitBtn;
             btn.disabled = true; btn.querySelector('.btn-text').classList.add('hidden'); btn.querySelector('.btn-loader').classList.remove('hidden');
-            const name = domElements.nameInput.value.trim(); const surname = domElements.surnameInput.value.trim(); const email = domElements.emailInput.value.trim();
+            const name = domElements.nameInput.value.trim(); const surname = domElements.surnameInput.value.trim(); const email = domElements.emailInput.value.trim(); const selectedCourseYear = parseInt(domElements.courseYearInput.value, 10) || COURSE_YEAR;
+            if (selectedCourseYear < 2025 || selectedCourseYear > 2099) {
+                showMessage('El año del curso debe estar entre 2025 y 2099.', 'error');
+                btn.disabled = false; btn.querySelector('.btn-text').classList.remove('hidden'); btn.querySelector('.btn-loader').classList.add('hidden');
+                return;
+            }
             try {
-                const { data: existingUser, error } = await supabaseClient.from('users_progress').select('*').eq('email', email).eq('course_title', COURSE_TITLE).single();
+                const { data: existingUser, error } = await supabaseClient.from('users_progress').select('*').eq('email', email).eq('course_title', COURSE_TITLE).eq('course_year', selectedCourseYear).single();
                 if (error && error.code !== 'PGRST116') throw error;
-                state.currentUser = existingUser ? { ...existingUser, name, surname } : { id: crypto.randomUUID(), name, surname, email, course_title: COURSE_TITLE, progress: 0, quiz_score: null, completed_date: null, approved: false };
+                state.currentUser = existingUser ? { ...existingUser, name, surname, course_year: selectedCourseYear } : { id: crypto.randomUUID(), name, surname, email, course_title: COURSE_TITLE, course_year: selectedCourseYear, progress: 0, quiz_score: null, completed_date: null, approved: false };
                 await saveUserProgressToSupabase(state.currentUser);
-                localStorage.setItem('blatorh_course_email', email); localStorage.setItem('blatorh_course_title', COURSE_TITLE);
+                localStorage.setItem('blatorh_course_email', email); localStorage.setItem('blatorh_course_title', COURSE_TITLE); localStorage.setItem('blatorh_course_year', String(selectedCourseYear));
                 if (state.currentUser.approved) { showScreen('diploma'); updateDiplomaContent(); } 
                 else { showScreen('course'); state.currentChapterIndex = state.currentUser.progress || 0; loadChapter(); }
             } catch (err) { showMessage(`Error en el ingreso: ${err.message}`, 'error'); } 
-            finally { btn.disabled = false; btn.querySelector('.btn-text').classList.remove('hidden'); btn.querySelector('.btn-loader').add('hidden'); }
+            finally { btn.disabled = false; btn.querySelector('.btn-text').classList.remove('hidden'); btn.querySelector('.btn-loader').classList.add('hidden'); }
         });
 
         domElements.listenBtn.addEventListener('click', handleListen);
